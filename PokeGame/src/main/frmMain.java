@@ -23,10 +23,12 @@ import javax.swing.ImageIcon;
 public class frmMain extends javax.swing.JFrame {
     
     Pokemon whoIsThatPokemon; // objeto de la clase que hace match con los datos de la API
+    Pokemon whoIsThatPokemon2;
     Pokedex dexter = new Pokedex();
     PokeViewer visor = new PokeViewer();
     Reloj horaActual = new Reloj();
-
+    hilo prueba1 = new hilo();
+    boolean bandera = true;
     /**
      * Creates new form frmMain
      */
@@ -35,7 +37,21 @@ public class frmMain extends javax.swing.JFrame {
         horaActual.start();
     }
     
+    public class hilo extends Thread{
+        public void run(){
+            try {
+                dexter.buscarPokemonaleatorio();
+            } catch (IOException ex) {
+                Logger.getLogger(frmMain.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(frmMain.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            btnPokemon1.setText(whoIsThatPokemon2.getName());
+        }
+    }
+    
     public class PokeViewer {
+   
         public void mostrarSprites() {
             if (whoIsThatPokemon != null){
                 try {
@@ -91,6 +107,11 @@ public class frmMain extends javax.swing.JFrame {
         lblSprite.setText("?");
 
         btnPokemon1.setText("???");
+        btnPokemon1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPokemon1ActionPerformed(evt);
+            }
+        });
 
         btnPokemon2.setText("???");
 
@@ -168,16 +189,22 @@ public class frmMain extends javax.swing.JFrame {
     private void btnJugarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnJugarActionPerformed
         try {
             whoIsThatPokemon = dexter.buscarPokemon();
-            btnPokemon1.setText(whoIsThatPokemon.getName());
+            //btnPokemon1.setText(whoIsThatPokemon.getName());
+            prueba1.start();
             btnPokemon2.setText(whoIsThatPokemon.getName());
             btnPokemon3.setText(whoIsThatPokemon.getName());
             btnPokemon4.setText(whoIsThatPokemon.getName());
             visor.mostrarSprites();
+            
         } catch (IOException | InterruptedException ex) {
             Logger.getLogger(frmMain.class.getName()).log(Level.SEVERE, null, ex);
         }
         btnJugar.setText("Jugar de nuevo");
     }//GEN-LAST:event_btnJugarActionPerformed
+
+    private void btnPokemon1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPokemon1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnPokemon1ActionPerformed
 
     /**
      * @param args the command line arguments
